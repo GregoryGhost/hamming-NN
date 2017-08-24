@@ -1,7 +1,9 @@
 #load "DataIO.fsx"
 #load "NetworkHamming.fsx"
+#load "createReport.fsx"
 open DataIO
 open NetworkHamming
+open CreateReport
 let main = 
     let pathTraningSet = System.IO.Path.Combine(__SOURCE_DIRECTORY__,"data/Kinnari/traning/")
     let pathTestSet = System.IO.Path.Combine(__SOURCE_DIRECTORY__,"data/Kinnari/test/0.3/")
@@ -13,3 +15,5 @@ let main =
     let exitNN = [runTestingNN(&testSet,wMatrix);
                   runTestingNN(&traningSet,wMatrix)]
     save exitNN
+    let pathTestSets = [pathTestSet; pathTraningSet]
+    createReport(exitNN, pathTraningSet, pathTestSets)

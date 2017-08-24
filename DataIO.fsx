@@ -10,7 +10,7 @@ let save data=
     let write  (x: int list, outs: StreamWriter)= 
         for i in x do 
            i.ToString() |> outs.WriteLine
-        outf.WriteLine ""
+        outf.WriteLine "<--->"
     List.iter (fun i -> write(i, outf)) data
     outf.Close()
 let loadData (path_load : string)= 
@@ -23,7 +23,7 @@ let loadData (path_load : string)=
         MatrixOperation.toVector z
     let loadImg = seq{
             if Directory.Exists(path_load) then
-                for img in Directory.EnumerateFiles(path_load) do
+                for img in Directory.EnumerateFiles(path_load, "*.bmp") do
                     let imgIn = new Bitmap(img)
                     yield imgIn
             else failwith "dir is not found: %s" path_load
