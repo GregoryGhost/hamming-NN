@@ -1,10 +1,9 @@
-#r "Fuchu.dll"
 #load @"../MatrixOperation.fs"
-open System
-open Fuchu
 open MatrixOperation
+#r @"../lib/Fuchu.dll"
 
 module Tests = begin
+    open Fuchu
     let k = 2.
     let vect = [|1.; 2.; 3.|]
     let m = array2D [vect
@@ -22,6 +21,8 @@ module Tests = begin
     let vOnk = Array.map (fun i-> i*k) vect
     let testingEye n expectedOutput = 
         Assert.Equal("", expectedOutput, eye(n))
+    let testingIeye n expectedOutput =
+        Assert.Equal("", expectedOutput, ieye(n))
     let testingMulOnK (m : float[,], k : float, expectedOutput : float[,]) =
         Assert.Equal("", expectedOutput, m^*k)
     let testingToVector (m : float[,], expectedOutput : float[,]) =
@@ -77,16 +78,16 @@ module Tests = begin
             testList "ieye" [
                 testCase "ieye 0" <| (fun _ ->
                     let expectedOutput0:float [,]  = array2D []
-                    testingEye 0 expectedOutput0
+                    testingIeye 0 expectedOutput0
                 );
                 testCase "ieye 2" <| (fun _ ->
-                    testingEye 2 (array2D [[0.; 1.]
-                                           [1.; 0.]])
+                    testingIeye 2 (array2D [[0.; 1.]
+                                            [1.; 0.]])
                 );
                 testCase "ieye 3" <| (fun _ -> 
-                    testingEye 3 (array2D [[0.; 1.; 1.]
-                                           [1.; 0.; 1.]
-                                           [1.; 1.; 0.]])
+                    testingIeye 3 (array2D [[0.; 1.; 1.]
+                                            [1.; 0.; 1.]
+                                            [1.; 1.; 0.]])
                 );
             ];
             testList "toVector" [
@@ -117,7 +118,7 @@ module Tests = begin
             ];
             testList "MatrixDifference" [
                 testCase "VectorRow" <| (fun _ ->
-                    let vector = array2D[vect]
+                    let vector = mRow
                     testingMatrixDifference(vector, vector, array2D[[0.; 0.; 0.]])
                 );
                 testCase "VectorCol" <| (fun _ ->
@@ -140,6 +141,7 @@ module Tests = begin
                             0
                         with
                         | :? System.Exception -> 1
+                        | _ -> 0
                     match test with
                     |1 -> ()
                     |0 -> failtest "should have failed"
@@ -183,10 +185,3 @@ module Tests = begin
             ];
         ]
 end
-
-open Tests
-// run suite
-suite
-|> Test.filter(fun s -> s.Contains "MulMatrixOnMatrix")
-|> run
-;;
